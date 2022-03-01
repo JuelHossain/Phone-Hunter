@@ -8,20 +8,26 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main class="container">
-      <h1>Search Your Phone Here</h1>
+    <header class="container">
+      <h1 class="logo" id="logo">Phone Hunter</h1>
       <div class="search-box">
         <input
           type="text"
           name="search"
           id="search-field"
           placeholder="Search Your desired Phone"
+          autofocus
         />
         <button id="search-button">Search</button>
-      </div>
+        </div>
+    </header>
+    <main class="container">
       <section class="error-box" id="error-box">
       </section>
-      <section class="result-box" id="result-box"></section>
+
+      <section class="result-box" id="result-box">
+      </section>
+
     </main>
     <script src="main.js"></script>
   </body>
