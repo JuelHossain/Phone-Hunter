@@ -39,3 +39,9 @@ h1{
 .result img {
     width: 100%;
 }
+.error-box {
+    display: none;
+    font-size: 30px;
+    text-align: center;
+    margin: 50px 0;
+}
