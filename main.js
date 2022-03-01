@@ -1,16 +1,22 @@
+const $ = s => document.querySelector(s);
+
 // search utilities
-const searchButton = document.getElementById('search-button');
-const searchField = document.getElementById('search-field');
-const resultBox = document.getElementById('result-box');
-const logo = document.getElementById('logo');
+const searchButton = $('#search-button');
+const searchField = $('#search-field');
+const resultField = $('#result-box');
+const logo = $('#logo');
+const err = $('#error-box');
 
 // important functions 
-const $ = s => document.querySelector(s);
-const errorBox = (display,innerText) => {
-    const err = document.getElementById('error-box');
-    err.style.display = display;
-    err.innerHTML = innerText;
+
+const resultBox = (inner, display='none',)=>{
+    resultField.style.display = display;
+    resultField.innerHTML = inner;
 }
+const errorBox = (inner, display='none') => {
+    err.style.display = display;
+    err.innerHTML = inner;
+};
 
 // event handling
 //making logo clicking reload page
@@ -20,19 +26,20 @@ logo.addEventListener('click', () => {
 // clearing search field when clicked to input search 
 searchField.addEventListener('click', () => {
     searchField.value = '';
+    errorBox();
     
 })
 // clearing result box when search input is changed
 searchField.addEventListener('change', () => {
-    resultBox.innerHTML = '';
-        errorBox('none');
+    resultBox();
+    errorBox();
 })
 
 //click event on search button
 searchButton.addEventListener('click', () => {
-    //clearing resultbox
-    resultBox.innerHTML = '';
-    resultBox.style.display = 'grid';
+    //clearing resultField
+    resultBox('', 'grid');
+
     //getting search text
     const searchText = searchField.value;
 
@@ -48,20 +55,16 @@ searchButton.addEventListener('click', () => {
     const showData = (data) => {
 
         //validating
-        if (data == '') {
-            errorBox('block',`Opps , There's No Phone In This Name! <br>Search Something Else!`)
+        if (data==false) {
+            errorBox(`Opps , There's No Phone In This Name! <br>Search Something Else!`, 'block');
                 
         } else {
 
             // looping through data 
-            data.forEach(element => {
-
-                // showing only 20 product 
-                // getting id 
-                const slug = element.slug;
+            data.forEach(e => {
                     
                 // getting phone details url 
-                const detailUrl = `https://openapi.programming-hero.com/api/phone/${slug}`;
+                const detailUrl = `https://openapi.programming-hero.com/api/phone/${e.slug}`;
 
                 // fetching details data 
                 fetch(detailUrl)
@@ -74,31 +77,39 @@ searchButton.addEventListener('click', () => {
                     let { image } = details;
                     let { name } = details;
                     let { releaseDate } = details;
+                    let { brand } = details;
+                    let { mainFeatures } = details;
+                    let { chipset } = mainFeatures;
+                    let { displaySize } = mainFeatures;
+                    let { memory } = mainFeatures;
+                    let { storage } = mainFeatures;
+                    let { sensors } = mainFeatures;
 
-
-                    // creating div 
                     const div = document.createElement('div');
-                    // adding css class 
                     div.classList.add('result');
-                    // console.log(details);;
-                    // inject data to innerHTML
-                    div.innerHTML = `
+                    div.innerHTML= `
                         <img src="${image}">
                         <h2>${name}</h2>
-                        <p>${releaseDate ? releaseDate : "NO release Date Sorry!"}</p>`
-                    
-                    // appending the div 
-                    resultBox.appendChild(div);
+                        <p>${releaseDate ? releaseDate : "NO release Date Sorry!"}</p>
+                        <p>brand: ${brand}`
+                        // appending the div 
+                    resultField.appendChild(div);
 
-                    //adding event listen on div
-                    div.addEventListener('click', () => {
-                        resultBox.style.display = 'block';
-                        resultBox.classList.add('details');
-                        resultBox.innerHTML = `
+                        //adding event listen on div
+                        div.addEventListener('click', () => {
+                            resultField.style.display = 'block';
+                            resultField.classList.add('details');
+                            resultField.innerHTML = `
                         <img src="${image}">
                         <h2>${name}</h2>
-                        <p>${releaseDate ? releaseDate : "NO release Date Sorry!"}</p>`
-                    })
+                        <p>${releaseDate ? releaseDate : "NO release Date Sorry!"}</p>
+                        <p>Chipset: ${chipset}</p>
+                        <p>Display Size: ${displaySize}</p>
+                        <p>Memory : ${memory}</p>
+                        <p>Storage: ${storage}</p>
+                        <p>Sensors: ${sensors}`
+                        })
+                    
                 }
          });
         }
